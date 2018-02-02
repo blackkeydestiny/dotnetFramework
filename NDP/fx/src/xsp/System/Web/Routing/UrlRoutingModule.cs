@@ -4,11 +4,20 @@
     using System.Runtime.CompilerServices;
     using System.Web.Security;
 
+
+    /*
+     * 请求拦截器的HttpModule
+     * 
+     * **/
     [TypeForwardedFrom("System.Web.Routing, Version=3.5.0.0, Culture=Neutral, PublicKeyToken=31bf3856ad364e35")]
     public class UrlRoutingModule : IHttpModule {
+
+
         private static readonly object _contextKey = new Object();
         private static readonly object _requestDataKey = new Object();
         private RouteCollection _routeCollection;
+
+
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
             Justification = "This needs to be settable for unit tests.")]
@@ -24,9 +33,18 @@
             }
         }
 
+
         protected virtual void Dispose() {
         }
 
+
+
+
+        // ===========================================Init=========================================================================
+        /*
+         * UrlRoutingModule对请求的拦截是通过注册HttpApplication的PostResolveRequestCache事件实现的
+         * 
+         * **/
         protected virtual void Init(HttpApplication application) {
 
             //////////////////////////////////////////////////////////////////
@@ -42,6 +60,9 @@
             application.PostResolveRequestCache += OnApplicationPostResolveRequestCache;
         }
 
+        /*
+         * 它通过HttpApplication获得当前的HTTP上下文,并将其作为参数调用RouteCollection的GetRouteData方法得到一个封装了路由数据的RouteData对象
+         * **/
         private void OnApplicationPostResolveRequestCache(object sender, EventArgs e) {
             HttpApplication app = (HttpApplication)sender;
             HttpContextBase context = new HttpContextWrapper(app.Context);
@@ -104,6 +125,10 @@
             // Remap IIS7 to our handler
             context.RemapHandler(httpHandler);
         }
+
+        // ===========================================Init=========================================================================
+
+
 
         #region IHttpModule Members
         void IHttpModule.Dispose() {

@@ -9,28 +9,39 @@
 
     [TypeForwardedFrom("System.Web.Routing, Version=3.5.0.0, Culture=Neutral, PublicKeyToken=31bf3856ad364e35")]
     public class RouteCollection : Collection<RouteBase> {
+
+
         private Dictionary<string, RouteBase> _namedMap = new Dictionary<string, RouteBase>(StringComparer.OrdinalIgnoreCase);
         private VirtualPathProvider _vpp;
-
         private ReaderWriterLockSlim _rwLock = new ReaderWriterLockSlim();
 
+
+
+        // ===========================================构造函数=========================================================================
         public RouteCollection() {
         }
 
         public RouteCollection(VirtualPathProvider virtualPathProvider) {
             VPP = virtualPathProvider;
         }
+        // ====================================================================================================================
 
+
+        // 表示是否需要在末尾添加 “ /” (如 果没有)
         public bool AppendTrailingSlash {
             get;
             set;
         }
 
+        // 意味着是否需要将生成的URL转变成小写
         public bool LowercaseUrls {
             get;
             set;
         }
 
+        /*
+         * 是否对现有物理文件实施路由，也就是说如果请求URL与物理文件的路径一直的是否还需要对其实施路由。默认值是False
+         * **/
         public bool RouteExistingFiles {
             get;
             set;
@@ -61,6 +72,8 @@
             }
         }
 
+
+
         public void Add(string name, RouteBase item) {
             if (item == null) {
                 throw new ArgumentNullException("item");
@@ -83,6 +96,12 @@
             }
         }
 
+        
+        // ===========================================MapPageRoute方法=========================================================================
+        /*
+         * 将物理文件路径映射到一个路由模板上：本质是，基于指定的路由模板创建一个Route对象并将其添加到路由表中.
+         * 
+         * **/
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings",
             Justification = "Warning was suppressed for consistency with existing similar routing API")]
         public Route MapPageRoute(string routeName, string routeUrl, string physicalFile) {
@@ -117,6 +136,11 @@
             Add(routeName, route);
             return route;
         }
+        // ====================================================================================================================
+
+
+
+
 
         [SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]
         protected override void ClearItems() {
@@ -124,11 +148,15 @@
             base.ClearItems();
         }
 
+
+        // ============================================处理线程安全问题========================================================================
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Not worth a breaking change.")]
         public IDisposable GetReadLock() {
             _rwLock.EnterReadLock();
             return new ReadLockDisposable(_rwLock);
         }
+        // ============================================处理线程安全问题========================================================================
+
 
         private RequestContext GetRequestContext(RequestContext requestContext) {
             if (requestContext != null) {
@@ -141,6 +169,7 @@
             return new RequestContext(new HttpContextWrapper(httpContext), new RouteData());
         }
 
+
         // Returns true if this is a request to an existing file
         private bool IsRouteToExistingFile(HttpContextBase httpContext) {
             string requestPath = httpContext.Request.AppRelativeCurrentExecutionFilePath;
@@ -150,6 +179,8 @@
                 VPP.DirectoryExists(requestPath)));
         }
 
+
+        // ===========================================GetRouteData=========================================================================
         public RouteData GetRouteData(HttpContextBase httpContext) {
             if (httpContext == null) {
                 throw new ArgumentNullException("httpContext");
@@ -202,6 +233,9 @@
 
             return null;
         }
+        // ===========================================GetRouteData=========================================================================
+
+
 
 
         [SuppressMessage("Microsoft.Globalization", "CA1307:SpecifyStringComparison", MessageId = "System.String.EndsWith(System.String)", Justification = @"okay")]
@@ -236,6 +270,9 @@
             return url;
         }
 
+
+
+        // ===========================================GetVirtualPath=========================================================================
         public VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values) {
             requestContext = GetRequestContext(requestContext);
 
@@ -283,12 +320,20 @@
                 return GetVirtualPath(requestContext, values);
             }
         }
+        // ===========================================GetVirtualPath=========================================================================
 
+
+
+
+        // ============================================处理线程安全问题========================================================================
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Not worth a breaking change.")]
         public IDisposable GetWriteLock() {
             _rwLock.EnterWriteLock();
             return new WriteLockDisposable(_rwLock);
         }
+        // ============================================处理线程安全问题========================================================================
+
+
 
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", 
             Justification = "This is not a regular URL as it may contain special routing characters.")]
@@ -309,6 +354,7 @@
 
             Add(route);
         }
+
 
         [SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]
         protected override void InsertItem(int index, RouteBase item) {

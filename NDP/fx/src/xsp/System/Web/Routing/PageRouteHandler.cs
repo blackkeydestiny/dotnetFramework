@@ -15,6 +15,9 @@ namespace System.Web.Routing {
     using System.Security.Principal;
 
     public class PageRouteHandler : IRouteHandler {
+
+
+
         public PageRouteHandler(string virtualPath)
             : this(virtualPath, true) {
         }
@@ -28,6 +31,8 @@ namespace System.Web.Routing {
             this.CheckPhysicalUrlAccess = checkPhysicalUrlAccess;
             _useRouteVirtualPath = VirtualPath.Contains("{");
         }
+
+
 
         /// <summary>
         /// This is the full virtual path (using tilde syntax) to the WebForm page.
@@ -72,6 +77,9 @@ namespace System.Web.Routing {
             return UrlAuthorizationModule.CheckUrlAccessForPrincipal(virtualPath, user, requestContext.HttpContext.Request.HttpMethod);
         }
 
+
+
+
         public virtual IHttpHandler GetHttpHandler(RequestContext requestContext) {
             if (requestContext == null) {
                 throw new ArgumentNullException("requestContext");
@@ -90,6 +98,8 @@ namespace System.Web.Routing {
             Page page = BuildManager.CreateInstanceFromVirtualPath(virtualPath, typeof(Page)) as Page;
             return page;
         }
+
+
 
         /// <summary>
         /// Gets the virtual path to the resource after applying substitutions based on route data.

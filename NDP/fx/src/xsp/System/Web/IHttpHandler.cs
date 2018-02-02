@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------------
+﻿//------------------------------------------------------------------------------
 // <copyright file="IHttpHandler.cs" company="Microsoft">
 //     Copyright (c) Microsoft Corporation.  All rights reserved.
 // </copyright>                                                                
@@ -14,6 +14,11 @@ namespace System.Web {
     
     using System.Security.Permissions;
 
+
+    /*
+     * 最终处理请求的对象HttpHandler的接口类型
+     * 
+     * **/
     /// <devdoc>
     ///    <para>
     ///       Defines the contract that developers must implement to
@@ -28,6 +33,7 @@ namespace System.Web {
         ///       Drives web processing execution.
         ///    </para>
         /// </devdoc>
+        /// 最终处理请求的方法
         void ProcessRequest(HttpContext context);   
 
         /// <devdoc>

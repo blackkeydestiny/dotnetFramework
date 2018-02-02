@@ -12,6 +12,8 @@
         private string _url;
         private ParsedRoute _parsedRoute;
 
+
+        // ===========================================构造函数=========================================================================
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings",
             Justification = "This is a URL template with special characters, not just a regular valid URL.")]
         public Route(string url, IRouteHandler routeHandler) {
@@ -45,7 +47,13 @@
             DataTokens = dataTokens;
             RouteHandler = routeHandler;
         }
+        // ===========================================构造函数=========================================================================
 
+
+
+        /*
+         * 以正则表达式的形武设定一些约束条件,针对路由变量
+         * **/
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
             Justification = "This property is settable so people can use object initializers.")]
         public RouteValueDictionary Constraints {
@@ -60,6 +68,9 @@
             set;
         }
 
+        /*
+         * 路由变量默认值
+         * **/
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
             Justification = "This property is settable so people can use object initializers.")]
         public RouteValueDictionary Defaults {
@@ -67,11 +78,15 @@
             set;
         }
 
+
         public IRouteHandler RouteHandler {
             get;
             set;
         }
 
+        /*
+         * 绑定在Route对象上的路由模板
+         * **/
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings",
             Justification = "This is a URL template with special characters, not just a regular valid URL.")]
         public string Url {
@@ -89,6 +104,12 @@
             }
         }
 
+
+
+        /*
+         * 重写RouteBase方法
+         * **/
+        // ===========================================GetRouteData、GetVirtualPath=========================================================================
         public override RouteData GetRouteData(HttpContextBase httpContext) {
             // Parse incoming URL (we trim off the first two chars since they're always "~/")
             string requestPath = httpContext.Request.AppRelativeCurrentExecutionFilePath.Substring(2) + httpContext.Request.PathInfo;
@@ -122,6 +143,7 @@
             return routeData;
         }
 
+
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values) {
             // Try to generate a URL that represents the values passed in based on current
             // values from the RouteData and new values using the specified Route.
@@ -147,6 +169,10 @@
             }
             return vpd;
         }
+        // ===========================================构造函数=========================================================================
+
+
+
 
         protected virtual bool ProcessConstraint(HttpContextBase httpContext, object constraint, string parameterName, RouteValueDictionary values, RouteDirection routeDirection) {
             IRouteConstraint customConstraint = constraint as IRouteConstraint;

@@ -16,6 +16,11 @@
             }
         }
 
+
+
+        /*
+         * 
+         * **/
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
             Justification = "This needs to be settable for unit tests.")]
         public RouteCollection RouteCollection {
@@ -30,6 +35,9 @@
             }
         }
 
+
+
+        // ===========================================ProcessRequest=========================================================================
         protected virtual void ProcessRequest(HttpContext httpContext) {
             ProcessRequest(new HttpContextWrapper(httpContext));
         }
@@ -57,8 +65,11 @@
 
             VerifyAndProcessRequest(httpHandler, httpContext);
         }
+        // ===========================================ProcessRequest=========================================================================
 
         protected abstract void VerifyAndProcessRequest(IHttpHandler httpHandler, HttpContextBase httpContext);
+
+
 
         #region IHttpHandler Members
         bool IHttpHandler.IsReusable {

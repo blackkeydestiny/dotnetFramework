@@ -2,8 +2,16 @@
     using System.Runtime.CompilerServices;
     using System.Diagnostics.CodeAnalysis;
 
+
+    /*
+     * RequestContext是对HttpContextBase和RouteData的封装
+     * 
+     * **/
     [TypeForwardedFrom("System.Web.Routing, Version=3.5.0.0, Culture=Neutral, PublicKeyToken=31bf3856ad364e35")]
     public class RequestContext {
+
+
+
         public RequestContext() {
         }
 
@@ -19,6 +27,7 @@
             HttpContext = httpContext;
             RouteData = routeData;
         }
+
 
         public virtual HttpContextBase HttpContext {
             get;
