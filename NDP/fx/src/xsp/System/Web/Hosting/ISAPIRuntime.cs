@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------------
+﻿//------------------------------------------------------------------------------
 // <copyright file="ISAPIRuntime.cs" company="Microsoft">
 //     Copyright (c) Microsoft Corporation.  All rights reserved.
 // </copyright>                                                                
@@ -134,6 +134,16 @@ namespace System.Web.Hosting {
         void IISAPIRuntime2.StopProcessing() {
             StopProcessing();
         }
+
+
+
+        /*
+         * ISAPIRuntime是进入NET托管环境的入口，
+         * 它在方法中通过一个ecb句柄指向了当前请求报文体的内存地址，
+         * 将HTTP请求报文简单封装为一个HttpWorkerRequest对象，
+         * 然后就是各种我们经常听到的PR（ProcessRequest）方法了。
+         * 
+         * **/
 
         /*
          * Process one ISAPI request
